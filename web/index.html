@@ -1,70 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fruit Prices</title>
+  <meta charset="UTF-8" />
+  <title>Produce Prices</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-    }
-    h1 {
-      color: #333;
-    }
-    table {
-      border-collapse: collapse;
-      width: 340px;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #aaa;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f0f0f0;
-    }
-    button {
-      padding: 8px 14px;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-    #output {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #444;
-    }
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    h1 { color: #333; margin-bottom: 6px; }
+    .section { margin-top: 24px; }
+    table { border-collapse: collapse; width: 360px; margin-top: 8px; }
+    th, td { border: 1px solid #aaa; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
+    button { padding: 8px 14px; margin-right: 10px; cursor: pointer; }
+    #output { margin-top: 10px; font-size: 14px; color: #444; }
   </style>
 </head>
 <body>
-  <h1>Fruit List</h1>
-  <button id="loadFruits">Load Fruits</button>
+  <h1>Produce List</h1>
+  <div>
+    <button id="loadFruits">Load Fruits</button>
+    <button id="loadVegetables">Load Vegetables</button>
+  </div>
   <div id="output"></div>
 
-  <table id="fruitTable">
-    <thead>
-      <tr><th>Fruit</th><th>Price (£)</th></tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="section">
+    <h2>Fruits (FastAPI)</h2>
+    <table id="fruitTable">
+      <thead><tr><th>Fruit</th><th>Price ($)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Vegetables (Java)</h2>
+    <table id="vegTable">
+      <thead><tr><th>Vegetable</th><th>Price ($)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
-    const apiUrl = "http://ec2-3-250-97-252.eu-west-1.compute.amazonaws.com:9000/fruits";
+    const FRUITS_API = "http://localhost:9000/fruits";      // FastAPI
+    const VEGETABLES_API = "http://localhost:8080/vegetables"; // Java Spring
+
     const out = document.getElementById("output");
 
-    document.getElementById("loadFruits").onclick = async () => {
+    async function load(url, tableSelector, key) {
       out.textContent = "Loading...";
       try {
-        const res = await fetch(apiUrl);
+        const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
-        const tbody = document.querySelector("#fruitTable tbody");
+        const items = data[key] || [];
+        const tbody = document.querySelector(`${tableSelector} tbody`);
         tbody.innerHTML = "";
-        (data.fruits || []).forEach(fruit => {
+        items.forEach(item => {
           const tr = document.createElement("tr");
-          const price = typeof fruit.price === "number" ? fruit.price.toFixed(2) : fruit.price;
-          tr.innerHTML = `<td>${fruit.name}</td><td>${price}</td>`;
+          const price =
+            typeof item.price === "number" ? item.price.toFixed(2) : item.price;
+          tr.innerHTML = `<td>${item.name}</td><td>${price}</td>`;
           tbody.appendChild(tr);
         });
 
@@ -73,7 +67,13 @@
         out.textContent = `Error: ${err.message}`;
         console.error(err);
       }
-    };
+    }
+
+    document.getElementById("loadFruits").onclick = () =>
+      load(FRUITS_API, "#fruitTable", "fruits");
+
+    document.getElementById("loadVegetables").onclick = () =>
+      load(VEGETABLES_API, "#vegTable", "vegetables");
   </script>
 </body>
 </html>
