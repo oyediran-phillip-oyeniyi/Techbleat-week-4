@@ -22,7 +22,7 @@ A simple app to show how a 2 Tier app works. A list of **fruits** and **vegetabl
  - Setup required scripts `python3 -m venv .venv`  
  - activate the script `source .venv/bin/activate`
  - install libraries `python -m pip install -r requirements.txt`
- - run app `uvicorn main:app --host 0.0.0.0 --port 9000`
+ - run app `uvicorn main:app --host 0.0.0.0 --port 9000 \&`
 
 
 ##  Java Requirments
@@ -30,6 +30,6 @@ A simple app to show how a 2 Tier app works. A list of **fruits** and **vegetabl
  - `sudo yum install java-17-amazon-corretto -y`
  - `sudo yum install maven -y`
  - `cd ~/fruits-veg_market/java`
- - `mvn spring-boot:run -Dspring-boot.run.arguments="--server.address=0.0.0.0 --server.port=8080" & `
+ - `mvn spring-boot:run -Dspring-boot.run.arguments="--server.address=0.0.0.0 --server.port=8080" \&`
 
  
