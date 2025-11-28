@@ -25,7 +25,8 @@ public class ProduceApp {
         new Item("Broccoli", 1.40),
         new Item("Tomato", 0.90),
         new Item("Spinach", 1.10),
-        new Item("Potato", 0.50)
+        new Item("Potato", 0.50),
+        new Item("Leaf", 6.50)
     );
     return Map.of("vegetables", vegetables);
   }
